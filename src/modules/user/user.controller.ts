@@ -1,39 +1,36 @@
 import {
+  Body,
+  Controller,
+  Delete,
   Get,
   Param,
-  Controller,
   Post,
-  Body,
-  Patch,
-  Delete,
+  Put
 } from '@nestjs/common';
+import { User } from './user.entity';
 import { UserService } from './user.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
-  @Get('/:username')
-  getUser(@Param('username') username: string) {
-    return this.userService.getUser(username);
+  @Get('')
+  getUser() {
+    return this.userService.findAll();
   }
 
-  @Post('/users')
-  createUser(
-    @Body() body: { username: string; email: string; password: string },
-  ) {
-    return this.userService.createUser(body);
+  @Post('')
+  async create(@Body() user: User) {
+    return await this.userService.create(user);
   }
 
-  @Patch('/users/:username')
-  updateUser(
-    @Body() body: { username: string; email: string; password: string },
-  ) {
-    return this.userService.updateUser(body);
+  @Put('/:id')
+  async update(@Param('id') id: number, @Body() user: User) {
+    return await this.userService.update(id, user);
   }
 
-  @Delete('/users/:username')
-  deleteUser(@Param('username') username: string) {
-    return this.userService.deleteUser(username);
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return await this.userService.remove(id);
   }
 }
