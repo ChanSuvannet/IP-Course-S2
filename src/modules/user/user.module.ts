@@ -9,6 +9,5 @@ import { UserService } from './user.service';
   controllers: [UsersController],
   providers: [UserService],
   exports: [TypeOrmModule],
-  // Add any other necessary configurations or modules
 })
 export class UserModule {}

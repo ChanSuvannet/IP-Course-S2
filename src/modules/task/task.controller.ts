@@ -1,36 +1,38 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UsePipes, ValidationPipe, } from '@nestjs/common';
+import { CreateTaskDto } from './dto/create-task.dto';
 import { Task } from './task.entity';
 import { TaskService } from './task.service';
 
 @Controller('tasks')
-export class TasksController {
-  constructor(private readonly _service: TaskService) { }
+export class TaskController {
+  constructor(private readonly taskService: TaskService) { }
 
-  @Get('')
-  getUser() {
-    return this._service.findAll();
+  @Get()
+  getAllTasks() {
+    return this.taskService.findAll();
   }
 
-  @Post('')
-  async create(@Body() user: Task) {
-    return await this._service.create(user);
+  @Get(':id')
+  getTaskById(@Param('id', ParseIntPipe) id: number) {
+    return this.taskService.findOne(id);
   }
 
-  @Put('/:id')
-  async update(@Param('id') id: number, @Body() user: Task) {
-    return await this._service.update(id, user);
+  @Post()
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async createTask(@Body() taskDto: CreateTaskDto) {
+    return this.taskService.create(taskDto);
   }
 
-  @Delete('/:id')
-  async remove(@Param('id') id: number) {
-    return await this._service.remove(id);
+  @Put(':id')
+  async updateTask(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateData: Partial<Task>,
+  ) {
+    return this.taskService.update(id, updateData);
+  }
+
+  @Delete(':id')
+  async deleteTask(@Param('id', ParseIntPipe) id: number) {
+    return this.taskService.remove(id);
   }
 }

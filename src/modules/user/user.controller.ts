@@ -1,36 +1,39 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put
-} from '@nestjs/common';
+
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UsePipes, ValidationPipe, } from '@nestjs/common';
 import { User } from './user.entity';
 import { UserService } from './user.service';
+import { CreateUserDto } from './dto/dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UserService) { }
 
-  @Get('')
-  getUser() {
+  @Get()
+  getAllUsers() {
     return this.userService.findAll();
   }
 
-  @Post('')
-  async create(@Body() user: User) {
-    return await this.userService.create(user);
+  @Get(':id')
+  getUserById(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.findOne(id);
   }
 
-  @Put('/:id')
-  async update(@Param('id') id: number, @Body() user: User) {
-    return await this.userService.update(id, user);
+  @Post()
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async createUser(@Body() userDto: CreateUserDto) {
+    return this.userService.create(userDto);
   }
 
-  @Delete('/:id')
-  async remove(@Param('id') id: number) {
-    return await this.userService.remove(id);
+  @Put(':id')
+  async updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() userData: Partial<User>,
+  ) {
+    return this.userService.update(id, userData);
+  }
+
+  @Delete(':id')
+  async deleteUser(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.remove(id);
   }
 }
