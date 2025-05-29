@@ -15,3 +15,6 @@ export class CreateUserDto {
   @MinLength(3, { message: 'Password must be at least 3 characters long' })
   password: string;
 }
+
+
+export class UpdateUserDto extends CreateUserDto {}

@@ -11,14 +11,14 @@ import { UserModule } from './modules/user/user.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'todo.sqlite',
-      entities: [User, Task],
-      synchronize: true,
+      type        : 'sqlite',
+      database    : 'todo.sqlite',
+      entities    : [User, Task],
+      synchronize : true,
     }),
     UserModule, TaskModule],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers     : [AppController],
+  providers       : [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
