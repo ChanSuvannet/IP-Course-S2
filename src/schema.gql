@@ -8,12 +8,62 @@ type Book {
   title: String!
 }
 
+type Booking {
+  end_date: DateTime!
+  hotel_id: Int!
+  id: Int!
+  is_checked_in: Boolean!
+  price: Float!
+  start_date: DateTime!
+}
+
+input CreateBookingInput {
+  end_date: DateTime!
+  hotel_id: Int!
+  price: Float!
+  start_date: DateTime!
+}
+
+input CreateHotelInput {
+  address: String!
+  name: String!
+  phone: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Hotel {
+  address: String!
+  id: Int!
+  name: String!
+  phone: String!
+}
+
 type Mutation {
   addBook(author: String!, title: String!): Book!
+  bookHotel(input: CreateBookingInput!): Booking!
+  cancelBooking(id: Int!): Boolean!
+  checkIn(id: Int!): Booking!
+  createHotel(input: CreateHotelInput!): Hotel!
   deleteBook(id: Int!): Boolean!
+  deleteHotel(id: Int!): Boolean!
+  updateHotel(input: UpdateHotelInput!): Hotel!
 }
 
 type Query {
+  getAllHotels: [Hotel!]!
   getBook(id: Int!): Book
+  getBookingsByDate(end: DateTime!, start: DateTime!): [Booking!]!
   getBooks: [Book!]!
+  getHotel(id: Int!): Hotel!
+}
+
+input UpdateHotelInput {
+  address: String
+  id: Int!
+  name: String
+  phone: String
 }
